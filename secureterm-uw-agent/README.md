@@ -2,7 +2,7 @@
 
 Agentic underwriting for **Meridian Life Assurance Ltd** SecureTerm individual term life, integrated with Guidewire PolicyCenter (Scenario A).
 
-This folder is the implementation. The specification it implements lives in [`precord-TestLifeUW SecureTerm UW-candidate/`](../precord-TestLifeUW%20SecureTerm%20UW-candidate/BUILD.md) and is read at runtime. Where this code needs a name, it uses the canonical term in `context/ontology_nodes.csv`.
+This folder is the implementation. The specification it implements lives in [`precord-TestLifeUW SecureTerm UW-candidate/`](../precord-TestLifeUW%20SecureTerm%20UW-candidate/BUILD.md) and is read at runtime.
 
 ## What runs
 
@@ -11,69 +11,140 @@ This folder is the implementation. The specification it implements lives in [`pr
 | **BLK-01** Medical Processing & Referral Orchestration | S3, S4, S6 | `act_with_review` | CP-BLK-01, 100% |
 | **BLK-02** Rating Compliance & Referral Dispatch | S8, S9 | `draft_for_approval` | CP-BLK-02, always |
 
-Sub-agents are sequential as declared in `spec/agents.yaml`:
-
-- BLK-01.1 Medical Requirements Evaluator — live medical-grid lookup and test order
-- BLK-01.2 Early Referral Formatter — provisional Atlas Re summary (draft only; no dispatch endpoint)
-- BLK-01.3 Clinical Evidence Ingestion & Validator — MER parse + deterministic BMI
-- BLK-02.1 Rating Compliance Auditor — VAL-03-01 override-reason gate
-- BLK-02.2 Reinsurance Referral Dispatcher — treaty-limit read + facultative package
-
 **Not automated** (by decision): S2 financial underwriting rules, S11 final risk disposition, S15 policy issue.
 
-## Rules this build follows
+## Google ADK — do not start the project with `adk`
 
-- All arithmetic (BMI, Extra Mortality parse, unit conversion) is deterministic Python, never a model call.
-- Every write tool is idempotent (`Idempotency-Key`).
-- Writes are held until the checkpoint is approved.
-- Values listed in `spec/open_items.csv` are not inferred. The runtime stops and records the item.
-- IP_05 has no endpoint: provisional Atlas Re dispatch is stored as a draft.
+The Precord runtime spec mentions ADK tracing. This workbench is still a **FastAPI app**. It is **not** a Google ADK `adk create` project.
 
-## Run locally
+These commands are the usual source of “Google ADK” errors and **will not** start this app:
+
+```bash
+adk web
+adk run
+adk run src/secureterm_uw
+```
+
+Why they fail:
+
+1. There is no `root_agent` inside `src/secureterm_uw`. ADK walks `__init__.py` packages and errors.
+2. A default ADK `LlmAgent` wants `GOOGLE_API_KEY` / Vertex credentials. This runtime does not.
+3. `pip install google-adk` in the **same** virtualenv can downgrade OpenTelemetry and break `pytest` / `serve`.
+
+Use the commands in the next section. Optional ADK Dev UI is documented at the bottom.
+
+## Run locally (verified)
+
+Python **3.11+**. From the **repository root**:
+
+### macOS / Linux
 
 ```bash
 cd secureterm-uw-agent
+
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
-pytest
-secureterm-uw eval
-secureterm-uw run --agent BLK-01 --synthetic LUW-FAST-01 --stage s3
-secureterm-uw serve
+
+python -m pip install -U pip
+python -m pip install -e ".[dev]"
+
+python -m pytest
+python -m secureterm_uw eval
+python -m secureterm_uw cases
+python -m secureterm_uw run --agent BLK-01 --synthetic LUW-FAST-01 --stage s3
+python -m secureterm_uw serve --host 127.0.0.1 --port 8000
 ```
 
-Workbench: http://127.0.0.1:8000  
-Health: `GET /health`  
-Metrics: `GET /metrics` (Prometheus)
+Always use `python -m …` (not the bare `secureterm-uw` or `pytest` names). Those console scripts live in `.venv/bin` and are missing from PATH if the venv is not active, or if pip dropped them in `~/.local/bin`.
 
-Default mode uses an in-process PolicyCenter mock (`SECURETERM_MOCK_GATEWAY=true`). Point `SECURETERM_API_GATEWAY_BASE_URL` and OAuth settings at the client gateway to run against a real estate.
+### Windows (PowerShell)
+
+```powershell
+cd secureterm-uw-agent
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -U pip
+python -m pip install -e ".[dev]"
+python -m pytest
+python -m secureterm_uw serve --host 127.0.0.1 --port 8000
+```
+
+### If `python -m venv` fails (`ensurepip` / `python3-venv` missing)
+
+```bash
+cd secureterm-uw-agent
+python3 -m pip install -U pip
+python3 -m pip install -e ".[dev]"
+python3 -m pytest
+python3 -m secureterm_uw serve --host 127.0.0.1 --port 8000
+```
+
+Or with [uv](https://docs.astral.sh/uv/):
+
+```bash
+cd secureterm-uw-agent
+uv venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+uv pip install -e ".[dev]"
+python -m pytest
+python -m secureterm_uw serve --host 127.0.0.1 --port 8000
+```
+
+### Workbench URLs
+
+After `serve` starts:
+
+| | |
+| --- | --- |
+| UI | http://127.0.0.1:8000/ |
+| Health | http://127.0.0.1:8000/health |
+| Metrics | http://127.0.0.1:8000/metrics |
+| Run agent | `POST /agents/BLK-01/run` |
+
+Stop the server with Ctrl+C.
+
+Default mode uses an in-process PolicyCenter mock. You do **not** need a Gemini or Google API key.
+
+Synthetic case ids: `LUW-FAST-01`, `LUW-REF-04`, `LUW-MER-06`, `LUW-EM-08`, `LUW-EM-OK`, `LUW-1010`.
+
+### If you already installed `google-adk` in this environment
+
+Recreate the venv so OpenTelemetry is not left on the ADK-pinned older SDK:
+
+```bash
+deactivate
+rm -rf .venv
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+python -m pip install -e ".[dev]"
+```
+
+## Optional: Google ADK Dev UI
+
+Only if you want ADK's own chat UI. Use a **separate** virtualenv.
+
+```bash
+cd secureterm-uw-agent
+python3 -m venv .venv-adk
+source .venv-adk/bin/activate
+python -m pip install -U pip
+python -m pip install -e .
+python -m pip install google-adk
+# Point ADK at this folder — not the repo root, not src/secureterm_uw
+adk web adk_app --port 8001
+```
+
+Then send `BLK-01 LUW-FAST-01 s3`. This adapter calls the same deterministic runtime; it does not call Gemini.
 
 ## Open items that still block production limits
 
-These are carried, not filled in. See [ASSUMPTIONS.md](ASSUMPTIONS.md).
-
-| ID | Subject | Runtime behaviour |
-| --- | --- | --- |
-| OI-01 | Retention Limit for Atlas Re | Treaty-limits tool is called; a blank limit is a halt |
-| OI-02 | Non-Medical Limit bands | Grid is queried; mock bands are labelled synthetic |
-| OI-03 | Referral sequencing | Uses the reimagined graph: S3 → S4 then S5 |
-| OI-04 | LUW-1010 Sum Assured conflict | Conflicting figures escalate; no value is chosen |
-| OI-05 | AHT discrepancy | Not used in agent logic |
-| IP_05 / HR-306 | Provisional referral endpoint | Draft only |
-
-## Observability
-
-Prometheus counters/histograms plus OpenTelemetry spans on every agent run and tool call. The inbound `x-correlation-id` header is propagated to gateway requests. PHI and financial evidence are not logged in full; cached case payloads are process-local and dropped when the process exits.
+See [ASSUMPTIONS.md](ASSUMPTIONS.md). Blocking Precord items are not invented at runtime.
 
 ## Layout
 
 ```
-src/secureterm_uw/
-  agents/          BLK-01, BLK-02, MER parser
-  arithmetic/      BMI and Extra Mortality
-  tools/           gateway, mock PolicyCenter, tool catalog
-  checkpoints.py   CP-BLK-01 / CP-BLK-02
-  runtime.py       composition + hold-until-approve
-  api.py           FastAPI workbench
-  evals/           EC-01, EC-02, VAL-02-01, VAL-03-01
+src/secureterm_uw/     FastAPI workbench, agents, tools
+adk_app/               optional Google ADK root_agent wrapper
+tests/
 ```

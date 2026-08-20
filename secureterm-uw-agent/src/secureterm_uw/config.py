@@ -23,13 +23,13 @@ class Settings(BaseSettings):
     oauth_client_secret: str = ""
     correlation_id_header: str = "x-correlation-id"
     otlp_endpoint: str = ""
-    log_sink: str = "stdout"
+    log_sink: str = ""
     model_name: str = "gemini-3.5-flash"
     model_temperature: float = 0.2
     llm_enabled: bool = False
     data_residency_zone: str = "in-approved-zone"
     session_idle_timeout_s: int = 1800
-    host: str = "0.0.0.0"
+    host: str = "127.0.0.1"
     port: int = 8000
 
 
