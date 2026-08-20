@@ -1,0 +1,62 @@
+version: 1
+defaults:
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on: ["429", "5xx", "timeout"]
+tools:
+  - tool_id: medical_grid_lookup
+    method: GET
+    path: /underwriting/medical-grid
+    direction: read
+    idempotency_key: null
+  - tool_id: order_medical_tests
+    method: POST
+    path: /submissions/{id}/medical/tests
+    direction: write
+    idempotency_key: "BLK-01:{case_id}:order_medical_tests:{payload_hash}"
+    held_until_checkpoint: true
+  - tool_id: read_document
+    method: GET
+    path: /documents/{docId}
+    direction: read
+  - tool_id: record_medical_results
+    method: POST
+    path: /submissions/{id}/medical/results
+    direction: write
+    idempotency_key: "BLK-01:{case_id}:record_medical_results:{payload_hash}"
+    held_until_checkpoint: true
+  - tool_id: rating_override
+    method: POST
+    path: /submissions/{id}/rating/override
+    direction: write
+    idempotency_key: "BLK-02:{case_id}:rating_override:{payload_hash}"
+    held_until_checkpoint: true
+  - tool_id: treaty_limits_lookup
+    method: GET
+    path: /reinsurance/treaty-limits
+    direction: read
+  - tool_id: dispatch_facultative_referral
+    method: POST
+    path: /reinsurance/referrals
+    direction: write
+    idempotency_key: "BLK-02:{case_id}:dispatch_facultative_referral:{payload_hash}"
+    held_until_checkpoint: true
+  - tool_id: create_manual_task
+    method: POST
+    path: /submissions/{id}/tasks
+    direction: write
+    idempotency_key: "{agent_id}:{case_id}:create_manual_task:{payload_hash}"
+unavailable:
+  - tool_id: dispatch_provisional_referral
+    reason: "IP_05 not available; HR-306:INT_01"
+_provenance:
+  tools[medical_grid_lookup]: integration_point_inventory@row:IP_01
+  tools[order_medical_tests]: integration_point_inventory@row:IP_02
+  tools[read_document]: integration_point_inventory@row:IP_03
+  tools[record_medical_results]: integration_point_inventory@row:IP_04
+  tools[rating_override]: integration_point_inventory@row:IP_06
+  unavailable[dispatch_provisional_referral]: integration_point_inventory@row:IP_05

@@ -1,0 +1,13 @@
+{
+  "case_identifier": "LUW-FAST-01",
+  "proposer_life_assured": "Synthetic Proposer A",
+  "product": "SecureTerm",
+  "term": "20 years",
+  "sum_assured": 5000000,
+  "applied_sum_insured": 5000000,
+  "occupation": "Accountant",
+  "occupation_class": "standard",
+  "age_last_birthday": 32,
+  "smoker_status": "non-smoker",
+  "tobacco_use": "never"
+}
