@@ -1,0 +1,48 @@
+{
+  "$id": "BLK-01.in.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_provenance": {
+    "blood_pressure_sitting": "surface_data_points@row:DP-02-04",
+    "bmi_auto_calculated": "surface_data_points@row:DP-02-03",
+    "condition": "surface_data_points@row:DP-02-07",
+    "family_medical_history": "surface_data_points@row:DP-02-08;ontology_nodes@row:T8a58ec7c",
+    "height": "surface_data_points@row:DP-02-01",
+    "impairment_record": "surface_data_points@row:DP-02-09",
+    "mer_reference": "surface_data_points@row:DP-02-06",
+    "tobacco_use": "surface_data_points@row:DP-02-05",
+    "weight": "surface_data_points@row:DP-02-02"
+  },
+  "description": "The case fields BLK-01 reads at S3, S4, S6, projected from the surfaces those steps are performed on.",
+  "properties": {
+    "blood_pressure_sitting": {
+      "$ref": "case.schema.json#/properties/blood_pressure_sitting"
+    },
+    "bmi_auto_calculated": {
+      "$ref": "case.schema.json#/properties/bmi_auto_calculated"
+    },
+    "condition": {
+      "$ref": "case.schema.json#/properties/condition"
+    },
+    "family_medical_history": {
+      "$ref": "case.schema.json#/properties/family_medical_history"
+    },
+    "height": {
+      "$ref": "case.schema.json#/properties/height"
+    },
+    "impairment_record": {
+      "$ref": "case.schema.json#/properties/impairment_record"
+    },
+    "mer_reference": {
+      "$ref": "case.schema.json#/properties/mer_reference"
+    },
+    "tobacco_use": {
+      "$ref": "case.schema.json#/properties/tobacco_use"
+    },
+    "weight": {
+      "$ref": "case.schema.json#/properties/weight"
+    }
+  },
+  "required": [],
+  "title": "BLK-01 input",
+  "type": "object"
+}

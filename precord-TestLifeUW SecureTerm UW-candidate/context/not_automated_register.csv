@@ -1,0 +1,4 @@
+﻿"exclusion_id","step_id","reason_kind","why","provenance"
+"EXC-01","S2","already deterministic","Income proof requirement rules based on applied Sum Assured brackets (e.g., Rs 1 Cr and Rs 2 Cr limits) are already fully structured and determined by core system policy guidelines.",""
+"EXC-02","S11","judgement","Determining the final underwriting risk disposition (Standard, Rated-up, Postponed, or Declined) involves weighing complex combined medical risks and reinsurer terms that cannot be resolved via structured scoring.",""
+"EXC-03","S15","regulatory","The final policy issue step legally binds contract coverage and requires manual quality-control validation by the assigned underwriter.",""

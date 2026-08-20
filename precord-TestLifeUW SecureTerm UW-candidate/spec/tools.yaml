@@ -1,0 +1,14 @@
+version: 1
+defaults:
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on:
+    - '429'
+    - 5xx
+    - timeout
+tools: []
+_provenance: {}

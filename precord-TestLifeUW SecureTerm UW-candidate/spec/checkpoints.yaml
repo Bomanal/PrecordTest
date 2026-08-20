@@ -1,0 +1,94 @@
+checkpoints:
+- checkpoint_id: CP-BLK-01
+  agent_id: BLK-01
+  covers_steps:
+  - S3
+  - S4
+  - S6
+  trigger: threshold
+  condition: Review 100% of this agent's cases, sampled.
+  review_rate_percent: '100'
+  shown:
+  - height
+  - weight
+  - bmi_auto_calculated
+  - blood_pressure_sitting
+  - tobacco_use
+  - mer_reference
+  - condition
+  - family_medical_history
+  - impairment_record
+  actions:
+  - approve
+  - escalate
+  reason_codes:
+  - code: VAL-02-01
+    meaning: not stated
+  capture:
+  - reason_code
+  sla_minutes: null
+  on_timeout: Escalate to Intake & Underwriting Assessment manual queue
+- checkpoint_id: CP-BLK-02
+  agent_id: BLK-02
+  covers_steps:
+  - S8
+  - S9
+  trigger: always
+  condition: Every case this agent handles is reviewed before it is released.
+  review_rate_percent: ''
+  shown:
+  - case_identifier
+  - proposer_life_assured
+  - product
+  - term
+  - sum_assured
+  - decision_status_header
+  - rating_engine_suggested_em
+  - underwriter_override
+  - referred_to
+  - reinsurer_terms
+  - decision
+  - override_reason_mandatory_field_completed
+  actions:
+  - approve
+  - escalate
+  reason_codes:
+  - code: VAL-03-01
+    meaning: not stated
+  capture:
+  - reason_code
+  sla_minutes: null
+  on_timeout: Escalate to Chief Underwriting Officer review queue
+_provenance:
+  CP-BLK-01.agent_id: agent_specifications@row:BLK-01
+  CP-BLK-01.trigger: agent_specifications@row:BLK-01
+  CP-BLK-01.on_timeout: agent_specifications@row:BLK-01
+  CP-BLK-01.review_rate_percent: agent_specifications@row:BLK-01
+  CP-BLK-01.shown.height: surface_data_points@row:DP-02-01
+  CP-BLK-01.shown.weight: surface_data_points@row:DP-02-02
+  CP-BLK-01.shown.bmi_auto_calculated: surface_data_points@row:DP-02-03
+  CP-BLK-01.shown.blood_pressure_sitting: surface_data_points@row:DP-02-04
+  CP-BLK-01.shown.tobacco_use: surface_data_points@row:DP-02-05
+  CP-BLK-01.shown.mer_reference: surface_data_points@row:DP-02-06
+  CP-BLK-01.shown.condition: surface_data_points@row:DP-02-07
+  CP-BLK-01.shown.family_medical_history: surface_data_points@row:DP-02-08;ontology_nodes@row:T8a58ec7c
+  CP-BLK-01.shown.impairment_record: surface_data_points@row:DP-02-09
+  CP-BLK-01.actions: surface_actions@row:ACT-02-01;surface_actions@row:ACT-02-02;surface_actions@row:ACT-02-03;surface_actions@row:ACT-02-04
+  CP-BLK-01.reason_codes.VAL-02-01: surface_validations@row:VAL-02-01
+  CP-BLK-02.agent_id: agent_specifications@row:BLK-02
+  CP-BLK-02.trigger: agent_specifications@row:BLK-02
+  CP-BLK-02.on_timeout: agent_specifications@row:BLK-02
+  CP-BLK-02.shown.case_identifier: surface_data_points@row:DP-01-01;ontology_nodes@row:Ta6f6b1ae
+  CP-BLK-02.shown.proposer_life_assured: surface_data_points@row:DP-01-02
+  CP-BLK-02.shown.product: surface_data_points@row:DP-01-03
+  CP-BLK-02.shown.term: surface_data_points@row:DP-01-04
+  CP-BLK-02.shown.sum_assured: surface_data_points@row:DP-01-05;ontology_nodes@row:T08ff74bf
+  CP-BLK-02.shown.decision_status_header: surface_data_points@row:DP-03-06
+  CP-BLK-02.shown.rating_engine_suggested_em: surface_data_points@row:DP-03-07
+  CP-BLK-02.shown.underwriter_override: surface_data_points@row:DP-03-08
+  CP-BLK-02.shown.referred_to: surface_data_points@row:DP-03-09
+  CP-BLK-02.shown.reinsurer_terms: surface_data_points@row:DP-03-10
+  CP-BLK-02.shown.decision: surface_data_points@row:DP-03-11
+  CP-BLK-02.shown.override_reason_mandatory_field_completed: surface_data_points@row:DP-03-12
+  CP-BLK-02.actions: surface_actions@row:ACT-03-01;surface_actions@row:ACT-03-02;surface_actions@row:ACT-03-03
+  CP-BLK-02.reason_codes.VAL-03-01: surface_validations@row:VAL-03-01

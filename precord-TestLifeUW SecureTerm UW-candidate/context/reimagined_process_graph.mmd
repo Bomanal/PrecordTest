@@ -1,0 +1,43 @@
+flowchart LR
+    R_S1["Register Application<br/>Manual decision"]
+    R_S2["Perform Financial Underwriting<br/>Rules unchanged"]
+    R_S3["Determine Medical Requirements<br/>Agent acts, reviewed"]
+    R_S4["Send Provisional Referral<br/>Agent acts, reviewed"]
+    R_S5["Wait for Medical Results<br/>Wait"]
+    R_S6["Record Medical Evidence and Vitals<br/>Agent acts, reviewed"]
+    R_S7["Review Health Declaration<br/>Manual decision"]
+    R_S8["Perform Risk Assessment & Rating<br/>Agent drafts for approval"]
+    R_S9["Raise Reinsurance Referral<br/>Manual decision"]
+    R_S10["Wait for Reinsurance Response<br/>Wait"]
+    R_S11["Record Underwriting Decision<br/>Stays with a person"]
+    R_S12["Issue Offer<br/>Manual decision"]
+    R_S13["Wait for Customer Response<br/>Wait"]
+    R_S14["Close Case<br/>Manual decision"]
+    R_S15["Issue Policy<br/>Stays with a person"]
+    R_S1 -->|always| R_S2
+    R_S2 -->|always| R_S3
+    R_S3 -->|Case obviously requires early reinsurer referral| R_S4
+    R_S3 -->|Medical tests are required standard path| R_S5
+    R_S3 -->|Proposer is eligible for non-medical acceptance| R_S7
+    R_S4 -->|always| R_S5
+    R_S5 -->|always| R_S6
+    R_S6 -->|always| R_S8
+    R_S7 -->|always| R_S8
+    R_S8 -->|Case requires reinsurance referral| R_S9
+    R_S8 -->|Case does not require reinsurance referral| R_S11
+    R_S9 -->|always| R_S10
+    R_S10 -->|always| R_S11
+    R_S11 -->|Decision is Standard or Rated-up| R_S12
+    R_S11 -->|Decision is Postpone or Decline| R_S14
+    R_S12 -->|always| R_S13
+    R_S13 -->|Proposer accepts offer| R_S15
+    R_S13 -->|Proposer rejects or does not respond| R_S14
+    classDef ai fill:#dbeafe,stroke:#2563eb,color:#1e3a8a;
+    classDef human fill:#fef3c7,stroke:#d97706,color:#92400e;
+    classDef rules fill:#dcfce7,stroke:#16a34a,color:#14532d;
+    classDef asis fill:#f1f5f9,stroke:#64748b,color:#334155;
+    classDef current fill:#e2e8f0,stroke:#94a3b8,color:#475569;
+    class R_S1,R_S5,R_S7,R_S9,R_S10,R_S12,R_S13,R_S14 asis
+    class R_S2 rules
+    class R_S3,R_S4,R_S6 ai
+    class R_S8,R_S11,R_S15 human

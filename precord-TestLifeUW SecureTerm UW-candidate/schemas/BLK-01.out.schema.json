@@ -1,0 +1,10 @@
+{
+  "$id": "BLK-01.out.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_provenance": {},
+  "description": "No surface with a matching action is mapped to S3, S4, S6, so nothing is known about what BLK-01 writes at it. That is an absence in the surface registers, not a statement that the agent touches nothing.",
+  "properties": {},
+  "required": [],
+  "title": "BLK-01 output",
+  "type": "object"
+}

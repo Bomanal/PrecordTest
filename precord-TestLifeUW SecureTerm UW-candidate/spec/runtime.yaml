@@ -1,0 +1,37 @@
+version: 1
+deployment:
+  target: unknown
+  region: ''
+  environment: development
+models:
+- agent_id: BLK-01
+  model: gemini-3.5-flash
+  fallback_model: unknown
+  temperature: 0.2
+  max_output_tokens: 4096
+- agent_id: BLK-02
+  model: gemini-3.5-flash
+  fallback_model: unknown
+  temperature: 0.2
+  max_output_tokens: 4096
+secrets:
+- name: GUIDEWIRE_CLIENT_SECRET
+  purpose: Authenticating service-to-service calls to Guidewire PolicyCenter via OAuth 2.0 client-credentials grant
+  store: secret_manager
+budgets: []
+observability:
+  log_sink: ''
+  correlation_id_header: ''
+  trace: emit every ADK event to log_sink with correlation_id_header set on the inbound request and propagated to every tool call
+guardrails:
+- Do not allow Restricted Protected Health Information or financial evidence to leave the approved data residency zone.
+- Do not utilize client data to train external AI models.
+- Purge all cached execution data immediately upon case closure.
+- Route all agent interactions strictly through the central API gateway.
+- Do not autonomously bind final risk classifications or confirm policy outcomes.
+_provenance:
+  deployment.target: technical_transformation_specification@h:environment
+  deployment.environment: technical_transformation_specification@h:environment
+  observability.log_sink: deployment_architecture_description@h:telemetry
+  models[1].agent_id: agent_specifications@h:blk-01
+  models[2].agent_id: agent_specifications@h:blk-02

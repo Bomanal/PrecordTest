@@ -1,0 +1,8 @@
+﻿"item_id","subject","detail","blocking","likely_source","source_artifact","raised_by","status"
+"OI-01","Per-life Retention Limit for Atlas Re Facultative Referral","","true","","synthesis_open_items","E1-S2","open"
+"OI-02","Non-Medical Limit (NML) Sum Assured and Age Bands","","true","","synthesis_open_items","E1-S2","open"
+"OI-03","Sequencing of reinsurance referral to Atlas Re","","true","","synthesis_open_items","E1-S2","open"
+"OI-04","Discrepancy in recorded Sum Insured for Case LUW-1010","","true","","synthesis_open_items","E1-S2","open"
+"OI-05","Average Handling Time (AHT) operational discrepancy","","true","","synthesis_open_items","E1-S2","open"
+"HR-306:INT_01","INT_01 on reinsurance_portal needs 'existing endpoint', so tools.yaml has no entry for it. Serving steps Facultative referrals will have no tool until the endpoint exists.","row:1","false","Client IT / the system owner","integration_point_inventory","HR-306:INT_01","open"
+"HR-306:INT_02","INT_02 on policycenter needs 'existing endpoint', so tools.yaml has no entry for it. Serving steps Referral status and response terms will have no tool until the endpoint exists.","row:2","false","Client IT / the system owner","integration_point_inventory","HR-306:INT_02","open"

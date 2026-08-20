@@ -1,0 +1,7 @@
+﻿"integration_id","class","system_id","endpoint","direction","payload_ref","serves","needs","evidence"
+"IP_01","API","SYS_01","/underwriting/medical-grid","read","PL_01","OPP-01","existing endpoint","guidewire_policycenter_life_uw_api_docs.pdf: GET /underwriting/medical-grid"
+"IP_02","API","SYS_01","/submissions/{id}/medical/tests","write","PL_02","OPP-01","existing endpoint","guidewire_policycenter_life_uw_api_docs.pdf: POST /submissions/{id}/medical/tests"
+"IP_03","API","SYS_01","/documents/{docId}","read","PL_03","OPP-02","existing endpoint","guidewire_policycenter_life_uw_api_docs.pdf: GET /documents/{docId}"
+"IP_04","API","SYS_01","/submissions/{id}/medical/results","write","PL_04","OPP-02","existing endpoint","guidewire_policycenter_life_uw_api_docs.pdf: POST /submissions/{id}/medical/results"
+"IP_05","UI","SYS_02","","write","","OPP-03","not available","interview_senior_underwriter_INT-2025-014.txt: S4 Send Provisional Referral - Done outside the system"
+"IP_06","API","SYS_01","/submissions/{id}/rating/override","write","PL_06","OPP-04","existing endpoint","guidewire_policycenter_life_uw_api_docs.pdf: POST /submissions/{id}/rating/override"

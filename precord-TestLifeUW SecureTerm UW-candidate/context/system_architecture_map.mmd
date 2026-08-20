@@ -1,0 +1,11 @@
+flowchart LR
+    SYS_01["Guidewire PolicyCenter"]
+    SYS_02["Atlas Re"]
+    SYS_03["LAB-PARTNER"]
+    AGENT["Agentic AI workbench"]
+    SYS_03 -->|Medical examination reports, lab| SYS_01
+    SYS_01 -->|Facultative reinsurance referrals, risk| SYS_02
+    SYS_01 -->|Provisional risk summary before| SYS_02
+    SYS_02 -->|Reinsurance decisions and confirmed| SYS_01
+    SYS_01 --> AGENT
+    AGENT --> SYS_01

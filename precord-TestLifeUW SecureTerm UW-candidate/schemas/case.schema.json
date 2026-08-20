@@ -1,0 +1,329 @@
+{
+  "$id": "case.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_provenance": {
+    "aggregate_cover_post_issue": "surface_data_points@row:DP-01-11",
+    "annual_premium": "surface_data_points@row:DP-04-11",
+    "applied_sum_insured": "surface_data_points@row:DP-01-08",
+    "blood_pressure_sitting": "surface_data_points@row:DP-02-04",
+    "bmi_auto_calculated": "surface_data_points@row:DP-02-03",
+    "case_identifier": "surface_data_points@row:DP-01-01;ontology_nodes@row:Ta6f6b1ae",
+    "condition": "surface_data_points@row:DP-02-07",
+    "decision": "surface_data_points@row:DP-03-11",
+    "decision_recorded_policy_issued": "surface_data_points@row:DP-04-20",
+    "decision_status_header": "surface_data_points@row:DP-03-06",
+    "declared_annual_income": "surface_data_points@row:DP-01-06",
+    "employer": "surface_data_points@row:DP-01-14",
+    "evidence_relied_upon": "surface_data_points@row:DP-04-14",
+    "existing_in_force_cover_other_insurers": "surface_data_points@row:DP-01-10",
+    "family_medical_history": "surface_data_points@row:DP-02-08;ontology_nodes@row:T8a58ec7c",
+    "financial_underwriter_notes": "surface_data_points@row:DP-01-15",
+    "financial_uw_complete": "surface_data_points@row:DP-04-16",
+    "header_status": "surface_data_points@row:DP-04-06",
+    "header_sum_insured": "surface_data_points@row:DP-04-05",
+    "height": "surface_data_points@row:DP-02-01",
+    "hlv_justified_amount": "surface_data_points@row:DP-01-09",
+    "impairment_record": "surface_data_points@row:DP-02-09",
+    "income_proof_status": "surface_data_points@row:DP-01-07",
+    "medical_evidence_complete": "surface_data_points@row:DP-04-17",
+    "mer_reference": "surface_data_points@row:DP-02-06",
+    "occupation": "surface_data_points@row:DP-01-12",
+    "occupation_class": "surface_data_points@row:DP-01-13",
+    "override_reason_mandatory_field_completed": "surface_data_points@row:DP-03-12",
+    "premium_mode": "surface_data_points@row:DP-04-12",
+    "product": "surface_data_points@row:DP-01-03",
+    "proposer_life_assured": "surface_data_points@row:DP-01-02",
+    "rating": "surface_data_points@row:DP-04-10",
+    "rating_assessed_referral_raised": "surface_data_points@row:DP-04-18",
+    "rating_engine_suggested_em": "surface_data_points@row:DP-03-07",
+    "referral_outcome": "surface_data_points@row:DP-04-13",
+    "referral_response_received": "surface_data_points@row:DP-04-19",
+    "referred_to": "surface_data_points@row:DP-03-09",
+    "reinsurer_terms": "surface_data_points@row:DP-03-10",
+    "riders": "surface_data_points@row:DP-04-09",
+    "sum_assured": "surface_data_points@row:DP-01-05;ontology_nodes@row:T08ff74bf",
+    "term": "surface_data_points@row:DP-01-04",
+    "term_length": "surface_data_points@row:DP-04-04",
+    "tobacco_use": "surface_data_points@row:DP-02-05",
+    "underwriter_override": "surface_data_points@row:DP-03-08",
+    "weight": "surface_data_points@row:DP-02-02",
+    "workflow_milestones": "surface_data_points@row:DP-04-15;ontology_nodes@row:T5e42fb56"
+  },
+  "description": "The shared case object every agent reads and writes. Generated from the surface data-point register under the ontology's canonical names; edit the registers rather than this file.",
+  "properties": {
+    "aggregate_cover_post_issue": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Aggregate cover post-issue",
+      "type": "number"
+    },
+    "annual_premium": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Annual premium",
+      "type": "number"
+    },
+    "applied_sum_insured": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Applied Sum Insured",
+      "type": "number"
+    },
+    "blood_pressure_sitting": {
+      "description": "Captured on SURF-02.",
+      "title": "Blood pressure (sitting)",
+      "type": "string"
+    },
+    "bmi_auto_calculated": {
+      "description": "Captured on SURF-02.",
+      "readOnly": true,
+      "title": "BMI (auto-calculated)",
+      "type": "string"
+    },
+    "case_identifier": {
+      "description": "The unique system-generated alphanumeric key used to track an individual case record across systems. Also written: Case ID, Case LUW-1010. Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Case Identifier",
+      "type": "string"
+    },
+    "condition": {
+      "description": "Captured on SURF-02.",
+      "title": "Condition",
+      "type": "string"
+    },
+    "decision": {
+      "description": "Captured on SURF-03.",
+      "title": "Decision",
+      "type": "string"
+    },
+    "decision_recorded_policy_issued": {
+      "description": "Captured on SURF-04.",
+      "format": "date",
+      "readOnly": true,
+      "title": "Decision recorded / policy issued",
+      "type": "string"
+    },
+    "decision_status_header": {
+      "description": "Captured on SURF-03.",
+      "readOnly": true,
+      "title": "Decision Status Header",
+      "type": "string"
+    },
+    "declared_annual_income": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Declared annual income",
+      "type": "number"
+    },
+    "employer": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Employer",
+      "type": "string"
+    },
+    "evidence_relied_upon": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Evidence relied upon",
+      "type": "string"
+    },
+    "existing_in_force_cover_other_insurers": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Existing in-force cover (other insurers)",
+      "type": "number"
+    },
+    "family_medical_history": {
+      "description": "A disclosure of hereditary illnesses among an applicant's immediate family members used to assess genetic predisposition to certain risks. Also written: family history. Captured on SURF-02.",
+      "title": "Family Medical History",
+      "type": "string"
+    },
+    "financial_underwriter_notes": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Financial underwriter notes",
+      "type": "string"
+    },
+    "financial_uw_complete": {
+      "description": "Captured on SURF-04.",
+      "format": "date",
+      "readOnly": true,
+      "title": "Financial UW complete",
+      "type": "string"
+    },
+    "header_status": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Header Status",
+      "type": "string"
+    },
+    "header_sum_insured": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Header Sum Insured",
+      "type": "number"
+    },
+    "height": {
+      "description": "Captured on SURF-02.",
+      "title": "Height",
+      "type": "string"
+    },
+    "hlv_justified_amount": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "HLV-justified amount",
+      "type": "number"
+    },
+    "impairment_record": {
+      "description": "Captured on SURF-02.",
+      "title": "Impairment record",
+      "type": "string"
+    },
+    "income_proof_status": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Income proof status",
+      "type": "string"
+    },
+    "medical_evidence_complete": {
+      "description": "Captured on SURF-04.",
+      "format": "date",
+      "readOnly": true,
+      "title": "Medical evidence complete",
+      "type": "string"
+    },
+    "mer_reference": {
+      "description": "Captured on SURF-02.",
+      "title": "MER reference",
+      "type": "string"
+    },
+    "occupation": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Occupation",
+      "type": "string"
+    },
+    "occupation_class": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Occupation class",
+      "type": "string"
+    },
+    "override_reason_mandatory_field_completed": {
+      "description": "Captured on SURF-03.",
+      "title": "Override reason (mandatory field completed)",
+      "type": "string"
+    },
+    "premium_mode": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Premium mode",
+      "type": "string"
+    },
+    "product": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Product",
+      "type": "string"
+    },
+    "proposer_life_assured": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Proposer / Life Assured",
+      "type": "string"
+    },
+    "rating": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Rating",
+      "type": "string"
+    },
+    "rating_assessed_referral_raised": {
+      "description": "Captured on SURF-04.",
+      "format": "date",
+      "readOnly": true,
+      "title": "Rating assessed / referral raised",
+      "type": "string"
+    },
+    "rating_engine_suggested_em": {
+      "description": "Captured on SURF-03.",
+      "readOnly": true,
+      "title": "Rating engine suggested EM",
+      "type": "string"
+    },
+    "referral_outcome": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Referral outcome",
+      "type": "string"
+    },
+    "referral_response_received": {
+      "description": "Captured on SURF-04.",
+      "format": "date",
+      "readOnly": true,
+      "title": "Referral response received",
+      "type": "string"
+    },
+    "referred_to": {
+      "description": "Captured on SURF-03.",
+      "title": "Referred to",
+      "type": "string"
+    },
+    "reinsurer_terms": {
+      "description": "Captured on SURF-03.",
+      "title": "Reinsurer terms",
+      "type": "string"
+    },
+    "riders": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Riders",
+      "type": "string"
+    },
+    "sum_assured": {
+      "description": "The total guaranteed benefit amount of life insurance coverage applied for or approved under a policy. Also written: Sum Insured, applied Sum, Cover Amount, Final Sum. Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Sum Assured",
+      "type": "number"
+    },
+    "term": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Term",
+      "type": "string"
+    },
+    "term_length": {
+      "description": "Captured on SURF-04.",
+      "readOnly": true,
+      "title": "Term Length",
+      "type": "string"
+    },
+    "tobacco_use": {
+      "description": "Captured on SURF-02.",
+      "title": "Tobacco use",
+      "type": "string"
+    },
+    "underwriter_override": {
+      "description": "Captured on SURF-03.",
+      "title": "Underwriter override",
+      "type": "string"
+    },
+    "weight": {
+      "description": "Captured on SURF-02.",
+      "title": "Weight",
+      "type": "string"
+    },
+    "workflow_milestones": {
+      "description": "The sequence of transactional states that track a life insurance application from intake to policy issuance or closure. Also written: Application Received, Case Closed, Decision Recorded, Offer Issued, Policy Issued, UW Started, UW Complete, Rating Assessed. Captured on SURF-04.",
+      "format": "date",
+      "readOnly": true,
+      "title": "Workflow Milestones",
+      "type": "string"
+    }
+  },
+  "required": [
+    "override_reason_mandatory_field_completed"
+  ],
+  "title": "Case",
+  "type": "object"
+}

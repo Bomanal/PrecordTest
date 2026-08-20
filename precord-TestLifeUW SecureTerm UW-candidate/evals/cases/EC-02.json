@@ -1,0 +1,11 @@
+{
+  "agent_id": "BLK-01",
+  "case_id": "EC-02",
+  "checkpoint_id": "CP-BLK-01",
+  "expected_output": "For cases that clearly require reinsurer approval, the underwriter bypasses standard sequential stages and sends an early provisional summary to Atlas Re.",
+  "input": "step S4; decided today by: Senior Underwriter, Individual Life Underwriting",
+  "origin": "tacit_knowledge",
+  "source_artifact": "tacit_knowledge",
+  "source_row": "TK-04",
+  "tags": "exception; S4"
+}

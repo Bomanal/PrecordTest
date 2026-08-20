@@ -1,0 +1,88 @@
+version: 1
+agents:
+- agent_id: BLK-01
+  name: Medical Processing & Referral Orchestration Block
+  source_block: BLK-01
+  serves_steps:
+  - S3
+  - S4
+  - S6
+  purpose: Orchestrates medical underwriting by determining grid requirements, validating clinical metrics to correct BMI calculation defects, and coordinating provisional reinsurer referrals.
+  trigger: Arrival of a new individual term life submission in Guidewire PolicyCenter or completion of financial underwriting.
+  input_schema: precord_schema_BLK_01_in
+  output_schema: precord_schema_BLK_01_out
+  tools:
+  - /underwriting/medical-grid
+  - /submissions/{id}/medical/tests
+  - /submissions/{id}/medical/results
+  composition: sequential
+  sub_agents:
+  - agent_id: BLK-01.1
+    name: Medical Requirements Evaluator
+    purpose: Evaluates proposer age and Sum Assured against non-medical limits and the medical grid to order standard tests.
+    tools:
+    - /underwriting/medical-grid
+    - /submissions/{id}/medical/tests
+  - agent_id: BLK-01.2
+    name: Early Referral Formatter
+    purpose: Identifies high-risk indicators to draft and pre-format one-page provisional summaries for Atlas Re.
+    tools: []
+  - agent_id: BLK-01.3
+    name: Clinical Evidence Ingestion & Validator
+    purpose: Parses examiner reports, double-checks raw height/weight to bypass Guidewire's BMI auto-calculation defect, and records clean vitals.
+    tools:
+    - /submissions/{id}/medical/results
+  model: gpt-4o
+  temperature: 0.0
+  autonomy: act_with_review
+  checkpoints:
+  - CP-BLK-01
+  failure_behaviour: Generates a manual review task with error details inside Guidewire PolicyCenter and pauses automated test dispatching.
+  timeout_s: 180
+  max_retries: 3
+- agent_id: BLK-02
+  name: Rating Compliance & Referral Dispatch Block
+  source_block: BLK-02
+  serves_steps:
+  - S8
+  - S9
+  purpose: Audits risk rating overrides for compliance, enforces mandatory justification inputs, and dispatches complete packages for facultative reinsurance referral.
+  trigger: Completion of medical recording or trigger of a rating event in Guidewire PolicyCenter.
+  input_schema: precord_schema_BLK_02_in
+  output_schema: precord_schema_BLK_02_out
+  tools:
+  - /submissions/{id}/rating/override
+  - /reinsurance/treaty-limits
+  - /reinsurance/referrals
+  composition: sequential
+  sub_agents:
+  - agent_id: BLK-02.1
+    name: Rating Compliance Auditor
+    purpose: Audits extra mortality rating overrides and enforces mandatory validation on the optional free-text override reason field.
+    tools:
+    - /submissions/{id}/rating/override
+  - agent_id: BLK-02.2
+    name: Reinsurance Referral Dispatcher
+    purpose: Evaluates treaty limits and compiles and dispatches facultative referrals directly to Atlas Re.
+    tools:
+    - /reinsurance/treaty-limits
+    - /reinsurance/referrals
+  model: gpt-4o
+  temperature: 0.0
+  autonomy: draft_for_approval
+  checkpoints:
+  - CP-BLK-02
+  failure_behaviour: Blocks the API call submission, flags the missing metadata field on screen, and requests the assigned underwriter input a valid justification.
+  timeout_s: 120
+  max_retries: 3
+_provenance:
+  agents[BLK-01].name: agent_specifications@row:1
+  agents[BLK-01].source_block: agent_specifications@row:1
+  agents[BLK-01].serves_steps: agent_specifications@row:1
+  agents[BLK-01].autonomy: agent_specifications@row:1
+  agents[BLK-01].tools: agent_specifications@row:1
+  agents[BLK-02].name: agent_specifications@row:2
+  agents[BLK-02].source_block: agent_specifications@row:2
+  agents[BLK-02].serves_steps: agent_specifications@row:2
+  agents[BLK-02].autonomy: agent_specifications@row:2
+  agents[BLK-02].tools: agent_specifications@row:2

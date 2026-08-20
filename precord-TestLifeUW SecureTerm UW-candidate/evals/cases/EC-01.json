@@ -1,0 +1,11 @@
+{
+  "agent_id": "BLK-01",
+  "case_id": "EC-01",
+  "checkpoint_id": "CP-BLK-01",
+  "expected_output": "The underwriter immediately decides if a case can be fast-tracked based on key preliminary characteristics before opening detailed clinical or financial records.",
+  "input": "step S3; cues: Sum Insured; NML band; occupation; age; smoker status; decided today by: Senior Underwriter, Individual Life Underwriting",
+  "origin": "tacit_knowledge",
+  "source_artifact": "tacit_knowledge",
+  "source_row": "TK-01",
+  "tags": "judgement; S3; VAL-02-01"
+}

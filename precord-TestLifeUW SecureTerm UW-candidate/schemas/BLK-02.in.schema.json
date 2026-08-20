@@ -1,0 +1,62 @@
+{
+  "$id": "BLK-02.in.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_provenance": {
+    "case_identifier": "surface_data_points@row:DP-01-01;ontology_nodes@row:Ta6f6b1ae",
+    "decision": "surface_data_points@row:DP-03-11",
+    "decision_status_header": "surface_data_points@row:DP-03-06",
+    "override_reason_mandatory_field_completed": "surface_data_points@row:DP-03-12",
+    "product": "surface_data_points@row:DP-01-03",
+    "proposer_life_assured": "surface_data_points@row:DP-01-02",
+    "rating_engine_suggested_em": "surface_data_points@row:DP-03-07",
+    "referred_to": "surface_data_points@row:DP-03-09",
+    "reinsurer_terms": "surface_data_points@row:DP-03-10",
+    "sum_assured": "surface_data_points@row:DP-01-05;ontology_nodes@row:T08ff74bf",
+    "term": "surface_data_points@row:DP-01-04",
+    "underwriter_override": "surface_data_points@row:DP-03-08"
+  },
+  "description": "The case fields BLK-02 reads at S8, S9, projected from the surfaces those steps are performed on.",
+  "properties": {
+    "case_identifier": {
+      "$ref": "case.schema.json#/properties/case_identifier"
+    },
+    "decision": {
+      "$ref": "case.schema.json#/properties/decision"
+    },
+    "decision_status_header": {
+      "$ref": "case.schema.json#/properties/decision_status_header"
+    },
+    "override_reason_mandatory_field_completed": {
+      "$ref": "case.schema.json#/properties/override_reason_mandatory_field_completed"
+    },
+    "product": {
+      "$ref": "case.schema.json#/properties/product"
+    },
+    "proposer_life_assured": {
+      "$ref": "case.schema.json#/properties/proposer_life_assured"
+    },
+    "rating_engine_suggested_em": {
+      "$ref": "case.schema.json#/properties/rating_engine_suggested_em"
+    },
+    "referred_to": {
+      "$ref": "case.schema.json#/properties/referred_to"
+    },
+    "reinsurer_terms": {
+      "$ref": "case.schema.json#/properties/reinsurer_terms"
+    },
+    "sum_assured": {
+      "$ref": "case.schema.json#/properties/sum_assured"
+    },
+    "term": {
+      "$ref": "case.schema.json#/properties/term"
+    },
+    "underwriter_override": {
+      "$ref": "case.schema.json#/properties/underwriter_override"
+    }
+  },
+  "required": [
+    "override_reason_mandatory_field_completed"
+  ],
+  "title": "BLK-02 input",
+  "type": "object"
+}
