@@ -1,0 +1,15 @@
+{
+  "underwriting_case_id": "UW-REQ-01",
+  "case": "UW-REQ-01",
+  "status": "Referred for medical evidence",
+  "aging": "0 days",
+  "assigned_underwriter": "Alex Chen",
+  "product_type": "Term Life",
+  "face_amount": 500000,
+  "applicant_name": "Jordan Hale",
+  "attending_physician_statement_required": true,
+  "laboratory_report_required": true,
+  "documents_received": [],
+  "application_received_at": "2026-08-01T09:00:00Z",
+  "touches": 1
+}
