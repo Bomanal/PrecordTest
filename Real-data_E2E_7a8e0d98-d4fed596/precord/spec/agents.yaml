@@ -1,0 +1,100 @@
+version: 1
+agents:
+- agent_id: BLK-REQS-CHASE
+  name: Underwriting Requirements and Chase Orchestrator
+  source_block: BLK-REQS-CHASE
+  serves_steps:
+  - S3
+  - S8
+  purpose: Orchestrates initial medical records requests and automated follow-ups with agents and vendors.
+  trigger: Triggered when a case is referred for manual review requiring medical evidence (S3), or when a case's pending duration exceeds thresholds (S8).
+  input_schema: precord_schema_BLK_REQS_CHASE_in
+  output_schema: precord_schema_BLK_REQS_CHASE_out
+  tools:
+  - INT_02
+  - INT_05
+  - INT_01
+  composition: single
+  sub_agents: []
+  model: gpt-4o
+  temperature: 0.0
+  autonomy: draft_for_approval
+  checkpoints:
+  - CP-BLK-REQS-CHASE
+  failure_behaviour: Logs a failure note in Case Queue Workbench, tags the case status as 'Manual Record Request Required', and alerts the assigned underwriter.
+  timeout_s: 120
+  max_retries: 3
+- agent_id: BLK-INTAKE-MONITOR
+  name: Medical Document Intake & Logging Agent
+  source_block: BLK-INTAKE-MONITOR
+  serves_steps:
+  - S5
+  - S9
+  purpose: Monitors incoming mail and document vaults to extract timelines and status updates, auto-advancing the case when records arrive.
+  trigger: Triggered by incoming agent emails (S5) or notifications of new document uploads to the vault (S9).
+  input_schema: precord_schema_BLK_INTAKE_MONITOR_in
+  output_schema: precord_schema_BLK_INTAKE_MONITOR_out
+  tools:
+  - INT_05
+  - INT_06
+  - INT_01
+  composition: parallel
+  sub_agents:
+  - agent_id: BLK-INTAKE-MONITOR.1
+    name: Email Confirmation Intake Agent
+    purpose: Monitors the shared inbox for incoming agent confirmations, parsing case IDs and expected medical record timelines to update the workbench.
+    tools:
+    - INT_05
+    - INT_01
+  - agent_id: BLK-INTAKE-MONITOR.2
+    name: Document Vault Verification Agent
+    purpose: Monitors the secure Document Vault for new laboratory reports and matches incoming documents against outstanding case requirements.
+    tools:
+    - INT_06
+    - INT_01
+  model: gpt-4o
+  temperature: 0.0
+  autonomy: act_with_review
+  checkpoints:
+  - CP-BLK-INTAKE-MONITOR
+  failure_behaviour: Routes the unparsed email or unverified document to the assigned underwriter's inbox/worklist and retains current status.
+  timeout_s: 90
+  max_retries: 3
+- agent_id: BLK-AUTO-ARCHIVE
+  name: Automated Case Archiver
+  source_block: BLK-AUTO-ARCHIVE
+  serves_steps:
+  - S13
+  purpose: Automatically archives and closes cases upon successful policy binding.
+  trigger: Triggered when a policy is bound and issued in Guidewire PolicyCenter (S13).
+  input_schema: precord_schema_BLK_AUTO_ARCHIVE_in
+  output_schema: precord_schema_BLK_AUTO_ARCHIVE_out
+  tools:
+  - INT_02
+  - INT_07
+  composition: single
+  sub_agents: []
+  model: gpt-4o
+  temperature: 0.0
+  autonomy: autonomous
+  checkpoints:
+  - CP-BLK-AUTO-ARCHIVE
+  failure_behaviour: Leaves the case open and triggers an automated ticket to IT Operations with details of the API failure.
+  timeout_s: 60
+  max_retries: 5
+_provenance:
+  agents[BLK-REQS-CHASE].name: agent_specifications@row:1
+  agents[BLK-REQS-CHASE].source_block: agent_specifications@row:1
+  agents[BLK-REQS-CHASE].serves_steps: agent_specifications@row:1
+  agents[BLK-REQS-CHASE].autonomy: agent_specifications@row:1
+  agents[BLK-REQS-CHASE].tools: agent_specifications@row:1
+  agents[BLK-INTAKE-MONITOR].name: agent_specifications@row:2
+  agents[BLK-INTAKE-MONITOR].source_block: agent_specifications@row:2
+  agents[BLK-INTAKE-MONITOR].serves_steps: agent_specifications@row:2
+  agents[BLK-INTAKE-MONITOR].autonomy: agent_specifications@row:2
+  agents[BLK-INTAKE-MONITOR].tools: agent_specifications@row:2
+  agents[BLK-AUTO-ARCHIVE].name: agent_specifications@row:3
+  agents[BLK-AUTO-ARCHIVE].source_block: agent_specifications@row:3
+  agents[BLK-AUTO-ARCHIVE].serves_steps: agent_specifications@row:3
+  agents[BLK-AUTO-ARCHIVE].autonomy: agent_specifications@row:3
+  agents[BLK-AUTO-ARCHIVE].tools: agent_specifications@row:3

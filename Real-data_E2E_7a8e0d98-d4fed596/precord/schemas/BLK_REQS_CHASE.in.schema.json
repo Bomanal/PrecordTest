@@ -1,0 +1,10 @@
+{
+  "$id": "BLK-REQS-CHASE.in.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_provenance": {},
+  "description": "No surface with a matching action is mapped to S3, S8, so nothing is known about what BLK-REQS-CHASE reads at it. That is an absence in the surface registers, not a statement that the agent touches nothing.",
+  "properties": {},
+  "required": [],
+  "title": "BLK-REQS-CHASE input",
+  "type": "object"
+}

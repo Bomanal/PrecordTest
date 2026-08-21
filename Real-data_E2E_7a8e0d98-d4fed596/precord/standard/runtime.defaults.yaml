@@ -1,0 +1,6 @@
+guardrails:
+  - refuse to write outside the tools declared in spec/tools.yaml
+  - no automation of any step listed in context/not_automated_register.csv
+  - escalate rather than decide when a required field is in spec/open_items.csv
+trace: emit every ADK event to log_sink with correlation_id_header set on the inbound request and propagated to every tool call
+secret_names_only: true

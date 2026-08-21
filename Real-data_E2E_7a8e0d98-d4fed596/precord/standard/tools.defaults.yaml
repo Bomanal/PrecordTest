@@ -1,0 +1,36 @@
+timeout_s: 30
+retry_policy:
+  strategy: exponential_backoff
+  max_attempts: 3
+  initial_delay_ms: 250
+  max_delay_ms: 4000
+  retry_on:
+    - "429"
+    - "5xx"
+    - timeout
+common_errors:
+  - code: "401"
+    meaning: the credential was rejected
+    agent_action: escalate
+  - code: "403"
+    meaning: the credential is not permitted to do this
+    agent_action: escalate
+  - code: "404"
+    meaning: the record does not exist
+    agent_action: fail
+  - code: "429"
+    meaning: the system is rate limiting this client
+    agent_action: retry
+  - code: "5xx"
+    meaning: the system is unavailable
+    agent_action: retry
+  - code: timeout
+    meaning: no response within timeout_s
+    agent_action: retry
+write_errors:
+  - code: "409"
+    meaning: the record changed under this call
+    agent_action: escalate
+  - code: "422"
+    meaning: the payload was rejected by validation
+    agent_action: fail

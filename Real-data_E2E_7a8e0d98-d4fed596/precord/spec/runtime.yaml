@@ -1,0 +1,58 @@
+version: 1
+deployment:
+  target: unknown
+  region: ''
+  environment: development
+models:
+- agent_id: BLK-REQS-CHASE
+  model: gemini-3.5-flash
+  fallback_model: gemini-3.5-pro
+  temperature: 0.2
+  max_output_tokens: 2048
+- agent_id: BLK-INTAKE-MONITOR
+  model: gemini-3.5-flash
+  fallback_model: gemini-3.5-pro
+  temperature: 0.2
+  max_output_tokens: 2048
+- agent_id: BLK-AUTO-ARCHIVE
+  model: gemini-3.5-flash
+  fallback_model: gemini-3.5-pro
+  temperature: 0.2
+  max_output_tokens: 2048
+secrets:
+- name: CASE_QUEUE_WORKBENCH_API_TOKEN
+  purpose: authenticates a tool declared in spec/tools.yaml
+  store: secret_manager
+- name: DOCUMENT_VAULT_API_CREDENTIALS
+  purpose: Authenticate agents to retrieve lab reports and clinical files
+  store: vault
+- name: EMAIL_API_CREDENTIALS
+  purpose: Authenticate agents to draft and send follow-up emails
+  store: vault
+- name: GUIDEWIRE_API_CREDENTIALS
+  purpose: Authenticate agents to read and write cases via Guidewire PolicyCenter Cloud API
+  store: vault
+- name: GUIDEWIRE_POLICYCENTER_API_TOKEN
+  purpose: authenticates a tool declared in spec/tools.yaml
+  store: secret_manager
+budgets:
+- scope: '*'
+  max_tokens_per_case: 100000
+  max_latency_ms: 30000
+observability:
+  log_sink: ''
+  correlation_id_header: ''
+  trace: emit every ADK event to log_sink with correlation_id_header set on the inbound request and propagated to every tool call
+guardrails:
+- Require manual underwriter review and approval for all drafted emails.
+- Route all document extraction and verification failures to Case Queue Workbench human queues.
+- Restrict autonomous agent execution to post-binding archiving processes only.
+- Trigger alerts immediately if the agent error rate exceeds two percent.
+- Trigger alerts immediately if API health status falls below ninety-nine percent.
+_provenance:
+  deployment.target: technical_transformation_specification@h:environment
+  deployment.environment: technical_transformation_specification@h:environment
+  observability.log_sink: deployment_architecture_description@h:telemetry
+  models[1].agent_id: agent_specifications@h:blk-reqs-chase
+  models[2].agent_id: agent_specifications@h:blk-intake-monitor
+  models[3].agent_id: agent_specifications@h:blk-auto-archive

@@ -1,0 +1,53 @@
+{
+  "$id": "case.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_provenance": {
+    "aging": "surface_data_points@row:DP-02",
+    "case": "surface_data_points@row:DP-04",
+    "risk_classification": "surface_data_points@row:DP-06;ontology_nodes@row:Tfc0fc279",
+    "status": "surface_data_points@row:DP-03",
+    "underwriting_case_id": "surface_data_points@row:DP-01;ontology_nodes@row:T6139a60b",
+    "underwriting_decision": "surface_data_points@row:DP-05;ontology_nodes@row:T3dd0f598"
+  },
+  "description": "The shared case object every agent reads and writes. Generated from the surface data-point register under the ontology's canonical names; edit the registers rather than this file.",
+  "properties": {
+    "aging": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Aging",
+      "type": "string"
+    },
+    "case": {
+      "description": "Captured on SURF-02.",
+      "readOnly": true,
+      "title": "Case",
+      "type": "string"
+    },
+    "risk_classification": {
+      "description": "The categorization tier assigned to an applicant based on medical criteria which determines premium rates. Also written: Risk class, risk_class, Preferred Non-Tobacco. Captured on SURF-02.",
+      "readOnly": true,
+      "title": "risk_classification",
+      "type": "string"
+    },
+    "status": {
+      "description": "Captured on SURF-01.",
+      "readOnly": true,
+      "title": "Status",
+      "type": "string"
+    },
+    "underwriting_case_id": {
+      "description": "The unique reference identifier assigned to an underwriting application. Also written: case_id, Case ID, caseId, case UW-2026-00042, UW-2026-00051, UW-2025-00990. Captured on SURF-01.",
+      "readOnly": true,
+      "title": "underwriting_case_id",
+      "type": "string"
+    },
+    "underwriting_decision": {
+      "description": "The formal conclusion reached on a file, such as approving, postponing, or declining the application. Also written: Decline, Postpone, Refer, Decision Approve, decision option, Decision options. Captured on SURF-02.",
+      "title": "underwriting_decision",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "title": "Case",
+  "type": "object"
+}

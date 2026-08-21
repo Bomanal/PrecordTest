@@ -1,0 +1,10 @@
+{
+  "$id": "BLK-INTAKE-MONITOR.out.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_provenance": {},
+  "description": "No surface with a matching action is mapped to S5, S9, so nothing is known about what BLK-INTAKE-MONITOR writes at it. That is an absence in the surface registers, not a statement that the agent touches nothing.",
+  "properties": {},
+  "required": [],
+  "title": "BLK-INTAKE-MONITOR output",
+  "type": "object"
+}

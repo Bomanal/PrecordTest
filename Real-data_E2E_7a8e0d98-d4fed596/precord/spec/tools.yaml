@@ -1,0 +1,326 @@
+version: 1
+defaults:
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on:
+    - '429'
+    - 5xx
+    - timeout
+tools:
+- tool_id: T-01
+  integration_point_id: INT_01
+  kind: write
+  protocol: unspecified
+  endpoint: GET /pc/cases?status=open
+  auth_ref: CASE_QUEUE_WORKBENCH_API_TOKEN
+  request_schema: schemas/case.schema.json
+  response_schema: schemas/case.schema.json
+  request_fields: []
+  response_fields: []
+  serves_steps:
+  - Open case metadata, aging data, and status information.
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on:
+    - '429'
+    - 5xx
+    - timeout
+  errors:
+  - code: '401'
+    meaning: the credential was rejected
+    agent_action: escalate
+  - code: '403'
+    meaning: the credential is not permitted to do this
+    agent_action: escalate
+  - code: '404'
+    meaning: the record does not exist
+    agent_action: fail
+  - code: '409'
+    meaning: the record changed under this call
+    agent_action: escalate
+  - code: '422'
+    meaning: the payload was rejected by validation
+    agent_action: fail
+  - code: '429'
+    meaning: the system is rate limiting this client
+    agent_action: retry
+  - code: 5xx
+    meaning: the system is unavailable
+    agent_action: retry
+  - code: timeout
+    meaning: no response within timeout_s
+    agent_action: retry
+  idempotency_key: <correlation_id>/T-01
+- tool_id: T-02
+  integration_point_id: INT_02
+  kind: write
+  protocol: unspecified
+  endpoint: POST /pc/cases/{caseId}/decision
+  auth_ref: GUIDEWIRE_POLICYCENTER_API_TOKEN
+  request_schema: schemas/case.schema.json
+  response_schema: schemas/case.schema.json
+  request_fields: []
+  response_fields: []
+  serves_steps:
+  - Decision submission payload (decision, risk class, and rationale).
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on:
+    - '429'
+    - 5xx
+    - timeout
+  errors:
+  - code: '401'
+    meaning: the credential was rejected
+    agent_action: escalate
+  - code: '403'
+    meaning: the credential is not permitted to do this
+    agent_action: escalate
+  - code: '404'
+    meaning: the record does not exist
+    agent_action: fail
+  - code: '409'
+    meaning: the record changed under this call
+    agent_action: escalate
+  - code: '422'
+    meaning: the payload was rejected by validation
+    agent_action: fail
+  - code: '429'
+    meaning: the system is rate limiting this client
+    agent_action: retry
+  - code: 5xx
+    meaning: the system is unavailable
+    agent_action: retry
+  - code: timeout
+    meaning: no response within timeout_s
+    agent_action: retry
+  idempotency_key: <correlation_id>/T-02
+- tool_id: T-03
+  integration_point_id: INT_03
+  kind: write
+  protocol: unspecified
+  endpoint: PATCH /pc/cases/{caseId}/status
+  auth_ref: GUIDEWIRE_POLICYCENTER_API_TOKEN
+  request_schema: schemas/case.schema.json
+  response_schema: schemas/case.schema.json
+  request_fields: []
+  response_fields: []
+  serves_steps:
+  - Case status closure status update.
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on:
+    - '429'
+    - 5xx
+    - timeout
+  errors:
+  - code: '401'
+    meaning: the credential was rejected
+    agent_action: escalate
+  - code: '403'
+    meaning: the credential is not permitted to do this
+    agent_action: escalate
+  - code: '404'
+    meaning: the record does not exist
+    agent_action: fail
+  - code: '409'
+    meaning: the record changed under this call
+    agent_action: escalate
+  - code: '422'
+    meaning: the payload was rejected by validation
+    agent_action: fail
+  - code: '429'
+    meaning: the system is rate limiting this client
+    agent_action: retry
+  - code: 5xx
+    meaning: the system is unavailable
+    agent_action: retry
+  - code: timeout
+    meaning: no response within timeout_s
+    agent_action: retry
+  idempotency_key: <correlation_id>/T-03
+- tool_id: T-04
+  integration_point_id: INT_05
+  kind: write
+  protocol: unspecified
+  endpoint: GET /mail/v1/messages?label=underwriting
+  auth_ref: EMAIL_SERVER_API_TOKEN
+  request_schema: schemas/case.schema.json
+  response_schema: schemas/case.schema.json
+  request_fields: []
+  response_fields: []
+  serves_steps:
+  - Inbound agent replies and vendor correspondence.
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on:
+    - '429'
+    - 5xx
+    - timeout
+  errors:
+  - code: '401'
+    meaning: the credential was rejected
+    agent_action: escalate
+  - code: '403'
+    meaning: the credential is not permitted to do this
+    agent_action: escalate
+  - code: '404'
+    meaning: the record does not exist
+    agent_action: fail
+  - code: '409'
+    meaning: the record changed under this call
+    agent_action: escalate
+  - code: '422'
+    meaning: the payload was rejected by validation
+    agent_action: fail
+  - code: '429'
+    meaning: the system is rate limiting this client
+    agent_action: retry
+  - code: 5xx
+    meaning: the system is unavailable
+    agent_action: retry
+  - code: timeout
+    meaning: no response within timeout_s
+    agent_action: retry
+  idempotency_key: <correlation_id>/T-04
+- tool_id: T-05
+  integration_point_id: INT_06
+  kind: write
+  protocol: unspecified
+  endpoint: GET /vault/v1/documents?caseId={caseId}
+  auth_ref: DOCUMENT_VAULT_API_TOKEN
+  request_schema: schemas/case.schema.json
+  response_schema: schemas/case.schema.json
+  request_fields: []
+  response_fields: []
+  serves_steps:
+  - Medical records and lab reports posted by vendors.
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on:
+    - '429'
+    - 5xx
+    - timeout
+  errors:
+  - code: '401'
+    meaning: the credential was rejected
+    agent_action: escalate
+  - code: '403'
+    meaning: the credential is not permitted to do this
+    agent_action: escalate
+  - code: '404'
+    meaning: the record does not exist
+    agent_action: fail
+  - code: '409'
+    meaning: the record changed under this call
+    agent_action: escalate
+  - code: '422'
+    meaning: the payload was rejected by validation
+    agent_action: fail
+  - code: '429'
+    meaning: the system is rate limiting this client
+    agent_action: retry
+  - code: 5xx
+    meaning: the system is unavailable
+    agent_action: retry
+  - code: timeout
+    meaning: no response within timeout_s
+    agent_action: retry
+  idempotency_key: <correlation_id>/T-05
+- tool_id: T-06
+  integration_point_id: INT_07
+  kind: write
+  protocol: unspecified
+  endpoint: GET /warehouse/v1/underwriting/cases
+  auth_ref: HISTORICAL_DB_API_TOKEN
+  request_schema: schemas/case.schema.json
+  response_schema: schemas/case.schema.json
+  request_fields: []
+  response_fields: []
+  serves_steps:
+  - Historical decisions used for archival and comparison.
+  timeout_s: 30
+  retry_policy:
+    strategy: exponential_backoff
+    max_attempts: 3
+    initial_delay_ms: 250
+    max_delay_ms: 4000
+    retry_on:
+    - '429'
+    - 5xx
+    - timeout
+  errors:
+  - code: '401'
+    meaning: the credential was rejected
+    agent_action: escalate
+  - code: '403'
+    meaning: the credential is not permitted to do this
+    agent_action: escalate
+  - code: '404'
+    meaning: the record does not exist
+    agent_action: fail
+  - code: '409'
+    meaning: the record changed under this call
+    agent_action: escalate
+  - code: '422'
+    meaning: the payload was rejected by validation
+    agent_action: fail
+  - code: '429'
+    meaning: the system is rate limiting this client
+    agent_action: retry
+  - code: 5xx
+    meaning: the system is unavailable
+    agent_action: retry
+  - code: timeout
+    meaning: no response within timeout_s
+    agent_action: retry
+  idempotency_key: <correlation_id>/T-06
+_provenance:
+  tools.T-01.integration_point_id: integration_point_inventory@row:1
+  tools.T-01.kind: integration_point_inventory@row:1
+  tools.T-01.endpoint: integration_point_inventory@row:1
+  tools.T-01.serves_steps: integration_point_inventory@row:1
+  tools.T-02.integration_point_id: integration_point_inventory@row:2
+  tools.T-02.kind: integration_point_inventory@row:2
+  tools.T-02.endpoint: integration_point_inventory@row:2
+  tools.T-02.serves_steps: integration_point_inventory@row:2
+  tools.T-03.integration_point_id: integration_point_inventory@row:3
+  tools.T-03.kind: integration_point_inventory@row:3
+  tools.T-03.endpoint: integration_point_inventory@row:3
+  tools.T-03.serves_steps: integration_point_inventory@row:3
+  tools.T-04.integration_point_id: integration_point_inventory@row:5
+  tools.T-04.kind: integration_point_inventory@row:5
+  tools.T-04.endpoint: integration_point_inventory@row:5
+  tools.T-04.serves_steps: integration_point_inventory@row:5
+  tools.T-05.integration_point_id: integration_point_inventory@row:6
+  tools.T-05.kind: integration_point_inventory@row:6
+  tools.T-05.endpoint: integration_point_inventory@row:6
+  tools.T-05.serves_steps: integration_point_inventory@row:6
+  tools.T-06.integration_point_id: integration_point_inventory@row:7
+  tools.T-06.kind: integration_point_inventory@row:7
+  tools.T-06.endpoint: integration_point_inventory@row:7
+  tools.T-06.serves_steps: integration_point_inventory@row:7

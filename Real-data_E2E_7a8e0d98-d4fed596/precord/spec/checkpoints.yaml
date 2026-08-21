@@ -1,0 +1,62 @@
+checkpoints:
+- checkpoint_id: CP-BLK-REQS-CHASE
+  agent_id: BLK-REQS-CHASE
+  covers_steps:
+  - S3
+  - S8
+  trigger: always
+  condition: Every case this agent handles is reviewed before it is released.
+  review_rate_percent: ''
+  shown: []
+  actions:
+  - approve
+  - escalate
+  reason_codes: []
+  capture:
+  - reason_code
+  sla_minutes: null
+  on_timeout: Escalate to Case Queue Workbench standard manual review
+- checkpoint_id: CP-BLK-INTAKE-MONITOR
+  agent_id: BLK-INTAKE-MONITOR
+  covers_steps:
+  - S5
+  - S9
+  trigger: threshold
+  condition: Review 10% of this agent's cases, sampled.
+  review_rate_percent: '10'
+  shown: []
+  actions:
+  - approve
+  - escalate
+  reason_codes: []
+  capture:
+  - reason_code
+  sla_minutes: null
+  on_timeout: Escalate to Assigned underwriter's queue in Case Queue Workbench
+- checkpoint_id: CP-BLK-AUTO-ARCHIVE
+  agent_id: BLK-AUTO-ARCHIVE
+  covers_steps:
+  - S13
+  trigger: exception
+  condition: Review only the cases the agent escalates, or where a blocking validation fails.
+  review_rate_percent: ''
+  shown: []
+  actions:
+  - approve
+  - escalate
+  reason_codes: []
+  capture:
+  - reason_code
+  sla_minutes: null
+  on_timeout: Escalate to IT Operations support desk queue
+_provenance:
+  CP-BLK-REQS-CHASE.agent_id: agent_specifications@row:BLK-REQS-CHASE
+  CP-BLK-REQS-CHASE.trigger: agent_specifications@row:BLK-REQS-CHASE
+  CP-BLK-REQS-CHASE.on_timeout: agent_specifications@row:BLK-REQS-CHASE
+  CP-BLK-INTAKE-MONITOR.agent_id: agent_specifications@row:BLK-INTAKE-MONITOR
+  CP-BLK-INTAKE-MONITOR.trigger: agent_specifications@row:BLK-INTAKE-MONITOR
+  CP-BLK-INTAKE-MONITOR.on_timeout: agent_specifications@row:BLK-INTAKE-MONITOR
+  CP-BLK-INTAKE-MONITOR.review_rate_percent: agent_specifications@row:BLK-INTAKE-MONITOR
+  CP-BLK-AUTO-ARCHIVE.agent_id: agent_specifications@row:BLK-AUTO-ARCHIVE
+  CP-BLK-AUTO-ARCHIVE.trigger: agent_specifications@row:BLK-AUTO-ARCHIVE
+  CP-BLK-AUTO-ARCHIVE.on_timeout: agent_specifications@row:BLK-AUTO-ARCHIVE
