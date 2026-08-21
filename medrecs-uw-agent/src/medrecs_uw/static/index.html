@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Medical Records UW workbench</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-2: #0d1a2e;
+      --card: #12233a;
+      --line: #1e3554;
+      --text: #e8eef7;
+      --muted: #93a4bb;
+      --accent: #3ec6c9;
+      --accent-2: #4ea3ff;
+      --warn: #f5c14a;
+      --danger: #f07178;
+      --ok: #4ade80;
+      --hold: #c4b5fd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #163354 0%, var(--bg) 45%);
+      color: var(--text);
+    }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 1.5rem; border-bottom: 1px solid var(--line);
+      background: rgba(8,17,31,.86); position: sticky; top: 0; z-index: 5;
+    }
+    header h1 { font-size: 1.05rem; margin: 0; letter-spacing: .02em; }
+    header p { margin: .15rem 0 0; color: var(--muted); font-size: .82rem; }
+    .badge { display: inline-block; padding: .15rem .5rem; border-radius: 999px; font-size: .72rem; background: #143c40; color: var(--accent); }
+    nav { display: flex; gap: .4rem; }
+    nav button, .btn {
+      background: transparent; color: var(--text); border: 1px solid var(--line);
+      border-radius: 8px; padding: .4rem .75rem; cursor: pointer;
+    }
+    nav button.active, .btn.primary { background: var(--accent-2); border-color: var(--accent-2); color: #041018; font-weight: 600; }
+    .btn.ok { background: #166534; border-color: #166534; }
+    .btn.warn { background: #7c4a03; border-color: #7c4a03; }
+    main { max-width: 1280px; margin: 0 auto; padding: 1.25rem; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .75rem; }
+    .card {
+      background: linear-gradient(180deg, var(--card), var(--bg-2));
+      border: 1px solid var(--line); border-radius: 14px; padding: 1rem;
+    }
+    .card h3 { margin: 0 0 .35rem; font-size: .78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+    .card .value { font-size: 1.45rem; font-weight: 700; }
+    .grid-2 { display: grid; grid-template-columns: 1.1fr .9fr; gap: 1rem; }
+    @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; } }
+    .pipeline { display: flex; gap: .6rem; flex-wrap: wrap; }
+    .step {
+      flex: 1; min-width: 180px; border: 1px solid var(--line); border-radius: 12px; padding: .8rem;
+      background: #102036;
+    }
+    .step small { color: var(--muted); }
+    table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+    th, td { text-align: left; padding: .45rem .4rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+    select, textarea, input {
+      width: 100%; background: #0b1728; color: var(--text); border: 1px solid var(--line);
+      border-radius: 8px; padding: .45rem .55rem; font: inherit;
+    }
+    textarea { min-height: 280px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .8rem; }
+    pre {
+      background: #07101c; color: #d7e6ff; padding: .8rem; border-radius: 10px;
+      overflow: auto; max-height: 480px; font-size: .78rem;
+    }
+    .status { padding: .1rem .45rem; border-radius: 999px; font-size: .72rem; }
+    .s-completed { background: #14532d; }
+    .s-checkpoint_pending { background: #4c1d95; }
+    .s-escalated, .s-error { background: #7f1d1d; }
+    .alert { border: 1px solid #7f1d1d; background: #2a1216; color: #fecaca; padding: .7rem; border-radius: 10px; margin: .6rem 0; }
+    .okbox { border: 1px solid #14532d; background: #102216; color: #bbf7d0; padding: .7rem; border-radius: 10px; margin: .6rem 0; }
+    .row { display: flex; gap: .5rem; flex-wrap: wrap; margin: .6rem 0; }
+    label { display: block; margin: .55rem 0 .25rem; color: var(--muted); font-size: .82rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Medical Records underwriting workbench</h1>
+      <p>Life insurance — collection, chase, intake, and post-bind archive · <span class="badge" id="env">…</span></p>
+    </div>
+    <nav>
+      <button class="active" data-panel="dash">Dashboard</button>
+      <button data-panel="run">Test agents</button>
+      <button data-panel="cases">Cases</button>
+      <button data-panel="cp">Checkpoints</button>
+      <button data-panel="evals">Evals</button>
+    </nav>
+  </header>
+  <main>
+    <section id="dash" class="panel active">
+      <div id="alerts"></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="grid-2" style="margin-top:1rem">
+        <div class="card">
+          <h3>Agent pipeline</h3>
+          <div class="pipeline" id="pipeline"></div>
+          <p style="color:var(--muted);font-size:.82rem">S1/S2 rules and triage, S10/S11 clinical decision, and S14 alternative outcomes stay with a person.</p>
+        </div>
+        <div class="card">
+          <h3>Recent runs</h3>
+          <div id="runs"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Open items (not inferred)</h3>
+        <div id="openitems"></div>
+      </div>
+    </section>
+
+    <section id="run" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Run an agent</h3>
+          <label>Agent
+            <select id="agent">
+              <option value="BLK-REQS-CHASE">BLK-REQS-CHASE — Requirements &amp; chase</option>
+              <option value="BLK-INTAKE-MONITOR">BLK-INTAKE-MONITOR — Intake &amp; logging</option>
+              <option value="BLK-AUTO-ARCHIVE">BLK-AUTO-ARCHIVE — Case archiver</option>
+            </select>
+          </label>
+          <label>Synthetic case
+            <select id="caseSelect"></select>
+          </label>
+          <label>Stage (optional)
+            <select id="stage">
+              <option value="">auto</option>
+              <option value="s3">S3 initial request</option>
+              <option value="s8">S8 aging chase</option>
+              <option value="s5">S5 email intake</option>
+              <option value="s9">S9 vault verify</option>
+              <option value="s13">S13 archive</option>
+            </select>
+          </label>
+          <label>Case JSON</label>
+          <textarea id="payload"></textarea>
+          <div class="row">
+            <button class="btn primary" onclick="runAgent()">Run agent</button>
+            <button class="btn" onclick="loadSelected()">Reload case</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Result</h3>
+          <pre id="out">Select a case and run an agent.</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="cases" class="panel">
+      <div class="card">
+        <h3>Synthetic cases</h3>
+        <div id="caseTable"></div>
+      </div>
+    </section>
+
+    <section id="cp" class="panel">
+      <div class="card">
+        <h3>Pending checkpoints</h3>
+        <p style="color:var(--muted);font-size:.85rem">BLK-REQS-CHASE is always reviewed. Intake is a 10% sample. Archive is exception-only.</p>
+        <div class="row">
+          <input id="reason" placeholder="reason_code (optional)" style="max-width:240px"/>
+          <button class="btn" onclick="listCp()">Refresh</button>
+        </div>
+        <div id="cpTable"></div>
+        <pre id="cpOut"></pre>
+      </div>
+    </section>
+
+    <section id="evals" class="panel">
+      <div class="card">
+        <h3>Acceptance evals</h3>
+        <div class="row">
+          <button class="btn primary" onclick="runEvals()">Run eval suite</button>
+        </div>
+        <div id="evalOut"></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const panels = document.querySelectorAll('.panel');
+    document.querySelectorAll('nav button').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        panels.forEach(p => p.classList.toggle('active', p.id === btn.dataset.panel));
+        if (btn.dataset.panel === 'dash') refreshDash();
+        if (btn.dataset.panel === 'cp') listCp();
+        if (btn.dataset.panel === 'cases') renderCases();
+      };
+    });
+
+    let CASES = [];
+
+    async function refreshDash() {
+      const [overview, kpis, history, openItems] = await Promise.all([
+        fetch('/health').then(r => r.json()),
+        fetch('/dashboard/kpis').then(r => r.json()),
+        fetch('/dashboard/history').then(r => r.json()),
+        fetch('/open-items').then(r => r.json()),
+      ]);
+      document.getElementById('env').textContent = overview.environment + (overview.mock_gateway ? ' · mock' : '');
+      const alerts = [];
+      (kpis.alerts || []).forEach(a => alerts.push(`<div class="alert">${a}</div>`));
+      document.getElementById('alerts').innerHTML = alerts.join('');
+      document.getElementById('kpis').innerHTML = (kpis.cards || []).map(c =>
+        `<div class="card"><h3>${c.label}</h3><div class="value">${c.value}</div><small style="color:var(--muted)">${c.hint || ''}</small></div>`
+      ).join('');
+      document.getElementById('pipeline').innerHTML = (overview.agents || []).map(a =>
+        `<div class="step"><strong>${a.agent_id}</strong><br/><small>${a.name}<br/>${a.autonomy} · ${a.steps}</small></div>`
+      ).join('');
+      const runs = history.runs || [];
+      document.getElementById('runs').innerHTML = runs.length ? `<table><tr><th>Agent</th><th>Case</th><th>Status</th><th>ms</th></tr>${
+        runs.map(r => `<tr><td>${r.agent_id}</td><td>${r.case_id}</td><td><span class="status s-${r.status}">${r.status}</span></td><td>${r.elapsed_ms}</td></tr>`).join('')
+      }</table>` : '<p style="color:var(--muted)">No runs yet. Use Test agents.</p>';
+      document.getElementById('openitems').innerHTML = `<table><tr><th>Id</th><th>Subject</th><th>Blocking</th></tr>${
+        (openItems.items || []).map(i => `<tr><td>${i.item_id}</td><td>${i.subject}</td><td>${i.blocking}</td></tr>`).join('')
+      }</table>`;
+    }
+
+    async function loadCases() {
+      const r = await fetch('/cases/synthetic');
+      const j = await r.json();
+      CASES = j.cases || [];
+      const sel = document.getElementById('caseSelect');
+      sel.innerHTML = CASES.map(c => `<option value="${c.underwriting_case_id}">${c.underwriting_case_id} · ${c.status}</option>`).join('');
+      loadSelected();
+      renderCases();
+    }
+
+    function loadSelected() {
+      const id = document.getElementById('caseSelect').value;
+      const found = CASES.find(c => c.underwriting_case_id === id) || CASES[0];
+      document.getElementById('payload').value = JSON.stringify(found, null, 2);
+    }
+
+    function renderCases() {
+      document.getElementById('caseTable').innerHTML = `<table><tr><th>Case</th><th>Status</th><th>Aging</th><th>Decision</th><th>Product</th></tr>${
+        CASES.map(c => `<tr><td>${c.underwriting_case_id}</td><td>${c.status || ''}</td><td>${c.aging || ''}</td><td>${c.underwriting_decision || ''}</td><td>${c.product_type || ''}</td></tr>`).join('')
+      }</table>`;
+    }
+
+    async function runAgent() {
+      const agent = document.getElementById('agent').value;
+      const stage = document.getElementById('stage').value;
+      const body = { case: JSON.parse(document.getElementById('payload').value) };
+      if (stage) body.stage = stage;
+      const r = await fetch('/agents/' + agent + '/run', {
+        method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify(body)
+      });
+      const j = await r.json();
+      document.getElementById('out').textContent = JSON.stringify(j, null, 2);
+    }
+
+    async function listCp() {
+      const r = await fetch('/checkpoints');
+      const j = await r.json();
+      const pending = j.pending || [];
+      document.getElementById('cpTable').innerHTML = pending.length ? `<table><tr><th>Case</th><th>Agent</th><th>Checkpoint</th><th></th></tr>${
+        pending.map(p => `<tr><td>${p.case_id}</td><td>${p.agent_id}</td><td>${p.checkpoint_id}</td><td>
+          <button class="btn ok" onclick="resolveCp('${p.checkpoint_run_id}','approve')">Approve</button>
+          <button class="btn warn" onclick="resolveCp('${p.checkpoint_run_id}','escalate')">Escalate</button>
+        </td></tr>`).join('')
+      }</table>` : '<p style="color:var(--muted)">No pending checkpoints.</p>';
+      document.getElementById('cpOut').textContent = JSON.stringify(j, null, 2);
+    }
+
+    async function resolveCp(id, action) {
+      const r = await fetch('/checkpoints/' + id, {
+        method: 'POST', headers: {'content-type': 'application/json'},
+        body: JSON.stringify({ action, reason_code: document.getElementById('reason').value || null, reviewer: 'underwriter' })
+      });
+      document.getElementById('cpOut').textContent = JSON.stringify(await r.json(), null, 2);
+      listCp();
+      refreshDash();
+    }
+
+    async function runEvals() {
+      const r = await fetch('/evals/run', { method: 'POST' });
+      const j = await r.json();
+      const rows = (j.results || []).map(x => `<tr><td>${x.check_id}</td><td>${x.passed ? 'pass' : 'fail'}</td><td>${x.detail || ''}</td></tr>`).join('');
+      document.getElementById('evalOut').innerHTML =
+        `<div class="${j.passed ? 'okbox' : 'alert'}">${j.passed ? 'Eval suite passed' : 'Eval suite failed'}</div>
+         <table><tr><th>Check</th><th>Result</th><th>Detail</th></tr>${rows}</table>`;
+    }
+
+    loadCases().then(refreshDash);
+  </script>
+</body>
+</html>
